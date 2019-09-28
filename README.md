@@ -3,6 +3,51 @@ A minimal version of swagger-ui (No NodeJS &amp; No dependencies)
 
 # Example
 
+For more complete examples, check under `/examples` and see what's in store.
+
+### Manifest
+```json
+{
+	"urls" : {
+		"/pet" : {
+			"POST" : {
+				"description" : "Add a new pet to the store",
+				"payloads" : {
+					"body" : {
+						"flags" : "REQUIRED",
+						"description" : "Pet object that needs to be added to the store",
+						"data" : {
+							"id": 0,
+								"category": {
+									"id": 0,
+									"name": "string"
+								},
+								"name": "doggie",
+								"photoUrls": [
+									"string"
+								],
+								"tags": [
+									{
+										"id": 0,
+										"name": "string"
+									}
+								],
+								"status": "available"
+							},
+						"responses" : {
+							"405" : {
+								"description" : "Invalid input"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+```
+
+### HTML Page
 ```html
 <html>
 	<head>
