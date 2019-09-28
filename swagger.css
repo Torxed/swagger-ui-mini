@@ -125,43 +125,75 @@ body {
 	margin: 0px;
 }
 
-.row > .content > h4 {
-	background-color: #FFFFFF;
-	padding: 20px;
-	padding-top: 12px;
-	padding-bottom: 12px;
-	font-size: 14px;
-	font-family: sans-serif;
-	color: #3b4151;
-}
 .row > .content > .parameters {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	padding-left: 20px;
 	padding-bottom: 20px;
 }
+
+	.row > .content > .parameters > h4 {
+		flex-basis: 100%;
+
+		background-color: #FFFFFF;
+		padding: 20px;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		font-size: 14px;
+		font-family: sans-serif;
+		color: #3b4151;
+
+		margin: 0px;
+	}
+
 	.row > .content > .parameters > .name {
 		min-width: 120px;
 		font-weight: 600;
+		padding-left: 20px;
+		padding-top: 20px;
 	}
 
-.row > .content > .responses {
+	.row > .content > .parameters > .description {
+		padding-top: 20px;
+	}
+
+.row > .content > .parameters > .responses {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	padding-left: 20px;
 	padding-bottom: 20px;
 }
-	.row > .content > .responses > .code {
+
+	.row > .content > .parameters > .responses > h4 {
+		flex-basis: 100%;
+
+		background-color: #FFFFFF;
+		padding: 20px;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		font-size: 14px;
+		font-family: sans-serif;
+		color: #3b4151;
+
+		margin: 0px;
+	}
+
+	.row > .content > .parameters > .responses > .code {
 		min-width: 120px;
 		font-weight: 600;
+		padding-left: 20px;
+		padding-top: 20px;
+	}
+
+	.row > .content > .parameters > .responses > .description {
+		padding-top: 20px;
 	}
 
 	.description {
 		display: flex;
 		flex-direction: column;
 		flex: 1 1;
+		padding: 20px;
 	}
 	.example {
 		font-family: consolas;
@@ -171,6 +203,7 @@ body {
 		flex-direction: column;
 		flex: 1 1;
 		flex-grow: 1;
+		margin-bottom: 10px;
 	}
 
 	.example > pre {

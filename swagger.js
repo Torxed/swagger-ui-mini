@@ -17,47 +17,43 @@ export function forEach(obj, func) {
 	}
 }
 
-export function build_header(method, url_path, description, deprecated=-1) {
+export function build_type_box(method, DEPRECATED=false) {
 	let type = document.createElement('div');
-	let url = document.createElement('div');
-	let short_desc = document.createElement('div');
-
-	if(deprecated >= 0) {
+	if(DEPRECATED) //TODO: Why is this reversed oÔ
 		type.classList = 'type ' + method;
-		url.classList = 'url';
-	} else {
+	else
 		type.classList = 'type ' + method + ' DEPRECATED';
-		url.classList = 'url DEPRECATED';
-	}
-
-	short_desc.classList = 'short_desc';
-
-	return type, url, short_desc;
+	type.innerHTML = method;
+	return type;
 }
 
-export function build_row(method, url_path, data) {
-	let row = document.createElement('div');
-	let authorization_required = document.createElement('div');
-
-	if(typeof data['flags'] === "undefined") data['flags'] = '';
-
-	let [type, url, short_desc] = build_header(method, url_path, data['description'], data['flags'].indexOf('DEPRECATED'));
-
-		row.classList = 'row ' + method;
-		type.classList = 'type ' + method;
+export function build_url_string(url_path, DEPRECATED=false) {
+	let url = document.createElement('div');
+	if(DEPRECATED) { //TODO: Why is this reversed oÔ
 		url.classList = 'url';
 	} else {
-		row.classList = 'row ' + method + ' DEPRECATED';
-		type.classList = 'type ' + method + ' DEPRECATED';
 		url.classList = 'url DEPRECATED';
 	}
-	short_desc.classList = 'short_desc';
-	authorization_required.classList = 'protected';
-
-	type.innerHTML = method;
 	url.innerHTML = url_path;
-	short_desc.innerHTML = data['description'];
+	return url;
+}
 
+export function build_description_string(description, DEPRECATED=false) {
+	let desc = document.createElement('div');
+	desc.classList = 'short_desc';
+	desc.innerHTML = description;
+	return desc;
+}
+
+export function build_header(method, url_path, description, DEPRECATED=false) {
+	let type = build_type_box(method, DEPRECATED)
+	let url = build_url_string(url_path, DEPRECATED);
+	let desc = build_description_string(description, DEPRECATED);
+	return [type, url, desc];
+}
+
+export function generate_lock_icon() {
+	let authorization_required = document.createElement('div');
 	let tmp_btn = document.createElement('button');
 	tmp_btn.classList = 'authbutton unlocked';
 	tmp_btn.innerHTML = `<svg width="20" height="20">
@@ -68,93 +64,144 @@ export function build_row(method, url_path, data) {
 					</svg>
 				</use>
 			</svg>`
+	authorization_required.classList = 'protected';
 	authorization_required.appendChild(tmp_btn);
+	return authorization_required;
+}
+
+export function build_description(description) {
+	let tmp = document.createElement('div');
+	tmp.classList = 'description';
+	tmp.innerHTML = description;
+	return tmp;
+}
+
+export function build_responses(data) {
+	let responses = document.createElement('div');
+	responses.classList = 'responses';
+
+	let title = document.createElement('h4');
+	title.innerHTML = 'Parameters';
+	responses.appendChild(title);
+
+	forEach(data, function(response_code, val) {
+		let code = document.createElement('div');
+		let description = document.createElement('div');
+		let span = document.createElement('span');
+		let example = document.createElement('div');
+		let pre = document.createElement('pre');
+		let _break = document.createElement('div');
+		_break.classList = 'break';
+
+		code.classList = 'code';
+		code.innerHTML = response_code;
+
+		example.classList = 'example';
+
+		description.classList = 'description';
+		span.innerHTML = val['description'];
+		description.appendChild(span);
+
+		if(typeof val['example'] !== 'undefined') {
+			pre.innerHTML = JSON.stringify(val['example'], null, 4);
+			example.appendChild(pre);
+			description.appendChild(example);
+		}
+
+		responses.appendChild(code);
+		responses.appendChild(description);
+		responses.appendChild(_break);
+	});
+
+	return responses;
+}
+
+export function build_parameters_info(data) {
+	let parameters = document.createElement('div');
+	parameters.classList = 'parameters';
+
+	forEach(data, function(parameter, val) {
+		let name = document.createElement('div');
+		let desc = document.createElement('div');
+		let desc_span = document.createElement('span');
+		let example = document.createElement('div');
+		let code = document.createElement('pre');
+
+		let title = document.createElement('h4');
+		title.innerHTML = 'Parameters';
+		parameters.appendChild(title);
+
+		name.classList = 'name';
+		desc.classList = 'description';
+		example.classList = 'example';
+
+		name.innerHTML = parameter;
+		desc_span.innerHTML = val['description'];
+		desc.appendChild(desc_span);
+
+		if(typeof val['data'] !== 'undefined') {
+			code.innerHTML = val['data'];
+			example.appendChild(code);
+			desc.appendChild(example);
+		}
+
+		parameters.appendChild(name);
+		parameters.appendChild(desc);
+
+		let responses = build_responses(val['responses']);
+
+		let _break = document.createElement('div');
+		_break.classList = 'break';
+
+		parameters.appendChild(_break);
+		parameters.appendChild(responses);
+	});
+
+	return parameters;
+}
+
+export function build_api_info(data) {
+	let content = document.createElement('div');
+	content.classList = 'content';
+	
+	let description = build_description(data['description']);
+	let parameters = build_parameters_info(data['payloads'], content);
+
+	content.appendChild(description);
+	content.appendChild(parameters);
+
+	return content;
+}
+
+export function build_row(method, url_path, data) {
+	let row = document.createElement('div');
+	let DEPRECATED = false;
+
+	if(typeof data['flags'] === "undefined") { data['flags'] = '' };
+	if(data['flags'].indexOf('DEPRECATED'))
+		DEPRECATED = true;
+
+	let [type, url, short_desc] = build_header(method, url_path, data['description'], DEPRECATED);
+
+	if (DEPRECATED)
+		row.classList = 'row ' + method;
+	else
+		row.classList = 'row ' + method + ' DEPRECATED';
+
 	row.appendChild(type);
 	row.appendChild(url);
 	row.appendChild(short_desc);
-	row.appendChild(authorization_required);
+	row.appendChild(generate_lock_icon());
 
+	/* If we have information about the API, extend it */
 	if(typeof data['payloads'] !== "undefined") {
-		/* Building the expandable content */
-		let content = document.createElement('div');
-		let api_description = document.createElement('div');
-		let parameters_title = document.createElement('h4');
-		let parameters = document.createElement('div');
-		let responses_title = document.createElement('h4');
-		let responses = document.createElement('div');
+		let endpoint_instructions = build_api_info(data)
 
-		content.classList = 'content';
-		api_description.classList = 'description'
-		parameters.classList = 'parameters';
-		responses.classList = 'responses';
-
-		parameters_title.innerHTML = 'Parameters';
-		responses_title.innerHTML = 'Responses';
-
-		forEach(data['payloads'], function(parameter, val) {
-			let name = document.createElement('div');
-			let desc = document.createElement('div');
-			let desc_span = document.createElement('span');
-			let example = document.createElement('div');
-			let data = document.createElement('pre');
-
-			name.classList = 'name';
-			desc.classList = 'description';
-			example.classList = 'example';
-
-			name.innerHTML = parameter;
-			desc_span.innerHTML = val['description'];
-			desc.appendChild(desc_span);
-
-			if(typeof val['data'] !== 'undefined') {
-				data.innerHTML = val['data'];
-				example.appendChild(data);
-				desc.appendChild(example);
-			}
-
-			parameters.appendChild(name);
-			parameters.appendChild(desc);
-
-			forEach(val['responses'], function(response_code, val) {
-				let code = document.createElement('div');
-				let description = document.createElement('div');
-				let span = document.createElement('span');
-				let example = document.createElement('div');
-				let pre = document.createElement('pre');
-				let _break = document.createElement('div');
-				_break.classList = 'break';
-
-				code.classList = 'code';
-				code.innerHTML = response_code;
-
-				example.classList = 'example';
-
-				description.classList = 'description';
-				span.innerHTML = val['description'];
-				description.appendChild(span);
-
-				if(typeof val['example'] !== 'undefined') {
-					pre.innerHTML = JSON.stringify(val['example'], null, 4);
-					example.appendChild(pre);
-					description.appendChild(example);
-				}
-
-				responses.appendChild(code);
-				responses.appendChild(description);
-				responses.appendChild(_break);
-			});
-		});
-
-		content.appendChild(api_description);
-		content.appendChild(parameters_title);
-		content.appendChild(parameters);
-		content.appendChild(responses_title);
-		content.appendChild(responses);
 
 		let _break = document.createElement('div');
 		_break.classList = 'break';
 		row.appendChild(_break);
-		row.appendChild(content);
+		row.appendChild(endpoint_instructions);
 	}
 
 	return row;
