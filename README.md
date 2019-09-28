@@ -1,4 +1,5 @@
-# swagger-ui-mini
+# <img src="https://hvornum.se/SwaggerUI-Mini.png" height="80">
+
 A minimal version of swagger-ui (No NodeJS &amp; No dependencies)
 
 # Example
