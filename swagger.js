@@ -1,6 +1,6 @@
-export function load_manifest(post) {
+export function load_manifest(url, post) {
 	let xhr = new XMLHttpRequest();
-	xhr.open("GET", "./manifest.json", true);
+	xhr.open("GET", url, true);
 	xhr.onreadystatechange = function() {
 		if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
 			manifest = JSON.parse(this.responseText);
