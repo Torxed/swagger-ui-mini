@@ -3,30 +3,32 @@ A minimal version of swagger-ui (No NodeJS &amp; No dependencies)
 
 # Example
 
-	<html>
-		<head>
-			<!-- Import the CSS -->
-			<link rel="stylesheet" type="text/css" href="swagger.css">
-	    
-			<!-- Define the manifest (null if you want it loaded later) -->
-			<script type="text/javascript">
-				let manifest = null;
-			</script>
-	    
-			<!-- Import the swagger module -->
-			<script type="module">
-				import * as swagger from '/swagger.js';
-				
-				window.onload = function() {
-					// Load a manifest, and once it's loaded - call a function().
-					swagger.load_manifest('/manifest.json', function() {
-						swagger.load_urls(manifest['urls'], document.getElementById('table'));
-					});
-				}
-			</script>
-		</head>
-		<body>
-			<div class="table" id="table">
-			</div>
-		</body>
-	</html>
+```html
+<html>
+	<head>
+		<!-- Import the CSS -->
+		<link rel="stylesheet" type="text/css" href="swagger.css">
+    
+		<!-- Define the manifest (null if you want it loaded later) -->
+		<script type="text/javascript">
+			let manifest = null;
+		</script>
+    
+		<!-- Import the swagger module -->
+		<script type="module">
+			import * as swagger from '/swagger.js';
+
+			window.onload = function() {
+				// Load a manifest, and once it's loaded - call a function().
+				swagger.load_manifest('/manifest.json', function() {
+					swagger.load_urls(manifest['urls'], document.getElementById('table'));
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div class="table" id="table">
+		</div>
+	</body>
+</html>
+```
