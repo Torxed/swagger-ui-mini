@@ -3,6 +3,7 @@ A minimal version of swagger-ui (No NodeJS &amp; No dependencies)
 
 # Example
 
+A [Live Demo](https://hvornum.se/swagger-ui-mini/examples/example.html) can be viewed online.<br>
 For more complete examples, check under `/examples` and see what's in store.
 
 ### Manifest
