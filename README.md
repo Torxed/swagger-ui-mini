@@ -1,6 +1,6 @@
 # <img src="https://hvornum.se/SwaggerUI-Mini.png" height="80">
 
-A minimal version of swagger-ui (No NodeJS, No Docker, No Dependencies)
+A minimal version of swagger-ui *(No NodeJS, No Docker, No Dependencies)*
 
 # Example
 

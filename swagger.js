@@ -17,14 +17,32 @@ export function forEach(obj, func) {
 	}
 }
 
-export function build_row(method, url_path, data) {
-	let row = document.createElement('div');
+export function build_header(method, url_path, description, deprecated=-1) {
 	let type = document.createElement('div');
 	let url = document.createElement('div');
 	let short_desc = document.createElement('div');
+
+	if(deprecated >= 0) {
+		type.classList = 'type ' + method;
+		url.classList = 'url';
+	} else {
+		type.classList = 'type ' + method + ' DEPRECATED';
+		url.classList = 'url DEPRECATED';
+	}
+
+	short_desc.classList = 'short_desc';
+
+	return type, url, short_desc;
+}
+
+export function build_row(method, url_path, data) {
+	let row = document.createElement('div');
 	let authorization_required = document.createElement('div');
 
-	if(typeof data['flags'] === "undefined" || data['flags'].indexOf('DEPRECATED') < 0) {
+	if(typeof data['flags'] === "undefined") data['flags'] = '';
+
+	let [type, url, short_desc] = build_header(method, url_path, data['description'], data['flags'].indexOf('DEPRECATED'));
+
 		row.classList = 'row ' + method;
 		type.classList = 'type ' + method;
 		url.classList = 'url';
