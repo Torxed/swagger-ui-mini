@@ -17,23 +17,9 @@ For more complete examples, check under `/examples` and see what's in store.
 						"flags" : "REQUIRED",
 						"description" : "Pet object that needs to be added to the store",
 						"data" : {
-							"id": 0,
-								"category": {
-									"id": 0,
-									"name": "string"
-								},
-								"name": "doggie",
-								"photoUrls": [
-									"string"
-								],
-								"tags": [
-									{
-										"id": 0,
-										"name": "string"
-									}
-								],
-								"status": "available"
-							},
+							"name" : "Cat name",
+							"type" : "CAT"
+						},
 						"responses" : {
 							"405" : {
 								"description" : "Invalid input"
