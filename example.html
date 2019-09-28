@@ -182,112 +182,18 @@
 				}
 		</style>
 		<script type="text/javascript">
-			let manifest = {
-				'urls' : {
-					'/pet' : {
-						'POST' : {
-							'description' : 'Add a new pet to the store',
-							'payloads' : {
-								'body' : {
-									'flags' : 'REQUIRED',
-									'description' : 'Pet object that needs to be added to the store',
-									'data' : {
-										"id": 0,
-											"category": {
-												"id": 0,
-												"name": "string"
-											},
-											"name": "doggie",
-											"photoUrls": [
-												"string"
-											],
-											"tags": [
-												{
-													"id": 0,
-													"name": "string"
-												}
-											],
-											"status": "available"
-										},
-									'responses' : {
-										405 : {
-											'description' : 'Invalid input'
-										}
-									}
-								}
-							}
-						},
-						'PUT' : {
-							'description' : 'Update an existing pet'
-						},
-						'urls' : {
-							'/pet/findByStatus' : {
-								'GET' : {
-									'description' : 'Finds Pets by status',
-									'payloads' : {
-										'tags' : {
-											'flags' : 'OPTIONAL',
-											'data' : '?status=[available, pending, sold]',
-											'description' : 'Status values that need to be considered for filter',
-											'responses' : {
-												200 : {
-													'description' : 'Successful operation',
-													'example' : [
-														{
-															"id": 0,
-															"category": {
-																"id": 0,
-																"name": "string"
-															},
-															"name": "doggie",
-															"photoUrls": [
-																"string"
-															],
-															"tags": [
-																{
-																	"id": 0,
-																	"name": "string"
-																}
-															],
-															"status": "available"
-														}
-													]
-												},
-												400 : {
-													'description' : 'Invalid status filter'
-												}
-											}
-										}
-									}
-								}
-							},
-							'/pet/findByTags' : {
-								'GET' : {
-									'description' : 'Finds Pets by tags',
-									'flags' : 'DEPRECATED'
-								}
-							},
-							'/pet/{petId}' : {
-								'GET' : {
-									'description' : 'Find pet by ID'
-								},
-								'POST' : {
-									'description' : 'Updates a pet in teh store with form data'
-								},
-								'DELETE' : {
-									'description' : 'Deletes a pet'
-								},
-								'urls' : {
-									'/pet/{petId}/uploadImage' : {
-										'POST' : {
-											'description' : 'Uploads an image'
-										}
-									}
-								}
-							}
-						}
+			let manifest = null;
+
+			function load_manifest(post) {
+				let xhr = new XMLHttpRequest();
+				xhr.open("GET", "./manifest.json", true);
+				xhr.onreadystatechange = function() {
+					if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+						manifest = JSON.parse(this.responseText);
+						post();
 					}
 				}
+				xhr.send();
 			}
 
 			function forEach(obj, func) {
@@ -352,8 +258,6 @@
 
 					parameters_title.innerHTML = 'Parameters';
 					responses_title.innerHTML = 'Responses';
-
-					console.log(data);
 
 					forEach(data['payloads'], function(parameter, val) {
 						let name = document.createElement('div');
@@ -421,9 +325,6 @@
 					row.appendChild(content);
 				}
 
-				//api_description.innerHTML = data['payload']['description'];
-
-
 				return row;
 			}
 
@@ -439,100 +340,30 @@
 				}
 			}
 
-			function load_urls(data) {
-				let tmp = document.getElementById('table');
+			function load_urls(data, container) {
 				forEach(data, function(url, val) {
 					forEach(data[url], function(method, val) {
 						if (method == 'urls') {
-							load_urls(val);
+							load_urls(val, container);
 						} else {
 							let row = build_row(method, url, val);
 							row.addEventListener('click', function() {
 								expand(row)
 							})
-							tmp.appendChild(row);
+							container.appendChild(row);
 						}
 					});
 				});
 			}
 
 			window.onload = function() {
-				load_urls(manifest['urls']);
+				load_manifest(function() {
+					load_urls(manifest['urls'], document.getElementById('table'));
+				});
 			}
 		</script>
 	</head>
 	<body>
 		<div class="table" id="table">
-		<!--
-			<div class="row DEPRECATED">
-				<div class="type DEPRECATED">GET</div>
-				<div class="url DEPRECATED">/pet/findByTags</div>
-				<div class="short_desc">Finds Pets by tags</div>
-				<div class="protected">
-					<button class="authbutton unlocked">
-						<svg width="20" height="20">
-							<use href="#unlocked" xlink:href="#unlocked">
-								<svg viewBox="0 0 20 20" id="unlocked">
-									<path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z">
-									</path>
-								</svg>
-							</use>
-						</svg>
-					</button>
-				</div>
-
-				<div class="break"></div>
-
-				<div class="content">
-					<div class="description">
-						Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
-					</div>
-					<h4>Parameters</h4>
-					<div class="parameters">
-						<div class="name">tags</div>
-						<div class="description">
-							Tags to filter by
-							<div class="example">
-							</div>
-						</div>
-					</div>
-					<h4>Responses</h4>
-					<div class="responses">
-						<div class="code">200</div>
-						<div class="description">
-							<span>Successful operation</span>
-							<div class="example">
-								<pre>[
-	{
-		"id": 0,
-		"category": {
-			"id": 0,
-			"name": "string"
-		},
-		"name": "doggie",
-		"photoUrls": [
-			"string"
-		],
-		"tags": [
-			{
-				"id": 0,
-				"name": "string"
-			}
-		],
-		"status": "available"
-	}
-]</pre>
-							</div>
-						</div>
-						<div class="break"></div>
-						<div class="code">400</div>
-						<div class="description">
-							Invalid tag value
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		-->
 	</body>
 </html>
