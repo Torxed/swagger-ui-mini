@@ -17,38 +17,59 @@ export function forEach(obj, func) {
 	}
 }
 
-export function build_type_box(method, DEPRECATED=false) {
-	let type = document.createElement('div');
-	if(DEPRECATED) //TODO: Why is this reversed oÔ
+export function build_method_square(method, DEPRECATED=false, EDITABLE=false) {
+	let type;
+	if(!EDITABLE) {
+		type = document.createElement('div');
+		type.innerHTML = method;
+	} else {
+		type = document.createElement('input');
+		type.value = method;
+	}
+	if(!DEPRECATED)
 		type.classList = 'type ' + method;
 	else
 		type.classList = 'type ' + method + ' DEPRECATED';
-	type.innerHTML = method;
 	return type;
 }
 
-export function build_url_string(url_path, DEPRECATED=false) {
-	let url = document.createElement('div');
-	if(DEPRECATED) { //TODO: Why is this reversed oÔ
+export function build_url_string(url_path, DEPRECATED=false, EDITABLE=false) {
+	let url;
+	if(!EDITABLE) {
+		url = document.createElement('div')
+		url.innerHTML = url_path;
+	} else {
+		url = document.createElement('input');
+		url.value = url_path;
+	}
+	
+	if(!DEPRECATED) {
 		url.classList = 'url';
 	} else {
 		url.classList = 'url DEPRECATED';
 	}
-	url.innerHTML = url_path;
 	return url;
 }
 
-export function build_description_string(description, DEPRECATED=false) {
-	let desc = document.createElement('div');
+export function build_description_string(description, DEPRECATED=false, EDITABLE=false) {
+	let desc;
+	if(!EDITABLE) {
+		desc = document.createElement('div');
+		desc.innerHTML = description;
+	} else {
+		desc = document.createElement('input');
+		desc.value = description;
+	}
+
 	desc.classList = 'short_desc';
 	desc.innerHTML = description;
 	return desc;
 }
 
-export function build_header(method, url_path, description, DEPRECATED=false) {
-	let type = build_type_box(method, DEPRECATED)
-	let url = build_url_string(url_path, DEPRECATED);
-	let desc = build_description_string(description, DEPRECATED);
+export function build_header(method, url_path, description, DEPRECATED=false, EDITABLE=false) {
+	let type = build_method_square(method, DEPRECATED, EDITABLE)
+	let url = build_url_string(url_path, DEPRECATED, EDITABLE);
+	let desc = build_description_string(description, DEPRECATED, EDITABLE);
 	return [type, url, desc];
 }
 
@@ -178,12 +199,12 @@ export function build_row(method, url_path, data) {
 	let DEPRECATED = false;
 
 	if(typeof data['flags'] === "undefined") { data['flags'] = '' };
-	if(data['flags'].indexOf('DEPRECATED'))
+	if(data['flags'].indexOf('DEPRECATED') >= 0)
 		DEPRECATED = true;
 
 	let [type, url, short_desc] = build_header(method, url_path, data['description'], DEPRECATED);
 
-	if (DEPRECATED)
+	if (!DEPRECATED)
 		row.classList = 'row ' + method;
 	else
 		row.classList = 'row ' + method + ' DEPRECATED';
@@ -205,6 +226,20 @@ export function build_row(method, url_path, data) {
 	}
 
 	return row;
+}
+
+export function add_empty_slot(container) {
+	let row = document.createElement('div');
+	let [type, url, short_desc] = build_header('UNKNOWN', '/', 'Description here', false, true);
+
+	row.classList = 'row UNKNOWN';
+
+	row.appendChild(type);
+	row.appendChild(url);
+	row.appendChild(short_desc);
+	row.appendChild(generate_lock_icon());
+
+	container.appendChild(row);
 }
 
 export function expand(obj) {

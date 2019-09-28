@@ -14,8 +14,10 @@
 
 			window.onload = function() {
 				// Load a manifest, and once it's loaded - call a function().
-				swagger.load_manifest('./manifest.json', function() {
+				swagger.load_manifest('./examples/manifest.json', function() {
 					swagger.load_urls(manifest['urls'], document.getElementById('table'));
+
+					swagger.add_empty_slot(document.getElementById('table'));
 				});
 			}
 		</script>
