@@ -51,7 +51,7 @@ export function build_url_string(url_path, DEPRECATED=false, EDITABLE=false) {
 	return url;
 }
 
-export function build_description_string(description, DEPRECATED=false, EDITABLE=false) {
+export function build_description_string(description, EDITABLE=false) {
 	let desc;
 	if(!EDITABLE) {
 		desc = document.createElement('div');
@@ -59,6 +59,7 @@ export function build_description_string(description, DEPRECATED=false, EDITABLE
 	} else {
 		desc = document.createElement('input');
 		desc.value = description;
+		desc.placeholder = 'Description';
 	}
 
 	desc.classList = 'short_desc';
@@ -69,7 +70,7 @@ export function build_description_string(description, DEPRECATED=false, EDITABLE
 export function build_header(method, url_path, description, DEPRECATED=false, EDITABLE=false) {
 	let type = build_method_square(method, DEPRECATED, EDITABLE)
 	let url = build_url_string(url_path, DEPRECATED, EDITABLE);
-	let desc = build_description_string(description, DEPRECATED, EDITABLE);
+	let desc = build_description_string(description, EDITABLE);
 	return [type, url, desc];
 }
 
@@ -90,10 +91,18 @@ export function generate_lock_icon() {
 	return authorization_required;
 }
 
-export function build_description(description) {
-	let tmp = document.createElement('div');
+export function build_description(description, EDITABLE=false) {
+	let tmp;
+	if(!EDITABLE) {
+		tmp = document.createElement('div');
+		tmp.innerHTML = description;
+	} else {
+		tmp = document.createElement('input');
+		tmp.value = description;
+		tmp.placeholder = 'Description';
+	}
+		
 	tmp.classList = 'description';
-	tmp.innerHTML = description;
 	return tmp;
 }
 
@@ -102,7 +111,7 @@ export function build_responses(data) {
 	responses.classList = 'responses';
 
 	let title = document.createElement('h4');
-	title.innerHTML = 'Parameters';
+	title.innerHTML = 'Responses';
 	responses.appendChild(title);
 
 	forEach(data, function(response_code, val) {
@@ -137,14 +146,53 @@ export function build_responses(data) {
 	return responses;
 }
 
-export function build_parameters_info(data) {
+export function build_parameters_info(data, EDITABLE=false) {
 	let parameters = document.createElement('div');
 	parameters.classList = 'parameters';
 
-	forEach(data, function(parameter, val) {
+	if (data) {
+		/* Render data */
+		forEach(data, function(parameter, val) {
+			let name = document.createElement('div');
+			let description = document.createElement('div');
+			let description_span = document.createElement('span');
+			let example = document.createElement('div');
+			let code = document.createElement('pre');
+
+			let title = document.createElement('h4');
+			title.innerHTML = 'Parameters';
+			parameters.appendChild(title);
+
+			name.classList = 'name';
+			description.classList = 'description';
+			example.classList = 'example';
+
+			name.innerHTML = parameter;
+			description_span.innerHTML = val['description'];
+			description.appendChild(description_span);
+
+			if(typeof val['data'] !== 'undefined') {
+				code.innerHTML = JSON.stringify(val['data'], null, 4);
+				example.appendChild(code);
+				description.appendChild(example);
+			}
+
+			parameters.appendChild(name);
+			parameters.appendChild(description);
+
+			let responses = build_responses(val['responses']);
+
+			let _break = document.createElement('div');
+			_break.classList = 'break';
+
+			parameters.appendChild(_break);
+			parameters.appendChild(responses);
+		});
+	} else {
+		/* Edit new data */
 		let name = document.createElement('div');
-		let desc = document.createElement('div');
-		let desc_span = document.createElement('span');
+		let description = document.createElement('div');
+		let description_span = document.createElement('span');
 		let example = document.createElement('div');
 		let code = document.createElement('pre');
 
@@ -153,42 +201,44 @@ export function build_parameters_info(data) {
 		parameters.appendChild(title);
 
 		name.classList = 'name';
-		desc.classList = 'description';
+		description.classList = 'description';
 		example.classList = 'example';
 
-		name.innerHTML = parameter;
-		desc_span.innerHTML = val['description'];
-		desc.appendChild(desc_span);
+		name.innerHTML = "New parameter";
+		description_span.innerHTML = "Enter new description";
+		description.appendChild(description_span);
 
-		if(typeof val['data'] !== 'undefined') {
-			code.innerHTML = val['data'];
-			example.appendChild(code);
-			desc.appendChild(example);
-		}
+//		if(typeof val['data'] !== 'undefined') {
+//			code.innerHTML = ;
+//			example.appendChild(code);
+//			description.appendChild(example);
+//		}
 
 		parameters.appendChild(name);
-		parameters.appendChild(desc);
+		parameters.appendChild(description);
 
-		let responses = build_responses(val['responses']);
+		//let responses = build_responses(val['responses']);
 
 		let _break = document.createElement('div');
 		_break.classList = 'break';
 
 		parameters.appendChild(_break);
-		parameters.appendChild(responses);
-	});
+		//parameters.appendChild(responses);
+	}
 
 	return parameters;
 }
 
-export function build_api_info(data) {
+export function build_api_info(data, EDITABLE=false) {
 	let content = document.createElement('div');
+	let description = data ? data['description'] : null
+	let payloads = data ? data['payloads'] : null
 	content.classList = 'content';
 	
-	let description = build_description(data['description']);
-	let parameters = build_parameters_info(data['payloads'], content);
+	let descriptions = build_description(description, EDITABLE);
+	let parameters = build_parameters_info(payloads, EDITABLE);
 
-	content.appendChild(description);
+	content.appendChild(descriptions);
 	content.appendChild(parameters);
 
 	return content;
@@ -228,9 +278,16 @@ export function build_row(method, url_path, data) {
 	return row;
 }
 
+export function generate_save_button(label) {
+	let button = document.createElement('button');
+	button.classList = 'button';
+	button.innerHTML = label;
+	return button;
+}
+
 export function add_empty_slot(container) {
 	let row = document.createElement('div');
-	let [type, url, short_desc] = build_header('UNKNOWN', '/', 'Description here', false, true);
+	let [type, url, short_desc] = build_header('UNKNOWN', '/', '', false, true);
 
 	row.classList = 'row UNKNOWN';
 
@@ -238,6 +295,16 @@ export function add_empty_slot(container) {
 	row.appendChild(url);
 	row.appendChild(short_desc);
 	row.appendChild(generate_lock_icon());
+	row.appendChild(generate_save_button("Save"));
+
+	let endpoint_instructions = build_api_info(null, true);
+
+	let _break = document.createElement('div');
+	_break.classList = 'break';
+	row.appendChild(_break);
+	row.appendChild(endpoint_instructions);
+
+	row.style.maxHeight = "none";
 
 	container.appendChild(row);
 }
