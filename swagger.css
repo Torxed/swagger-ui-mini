@@ -63,9 +63,10 @@ body {
 		.table > .row > .type.DELETE {
 			background-color: #f93e3e;
 		}
-		.table > .row > .type.UNKNOWN {
+		.table > .row > .type.METHOD {
 			background-color: #fBfBfB;
 			color: #C2C2C2;
+			text-transform: uppercase;
 		}
 
 	.table > .row > .url {
@@ -116,7 +117,7 @@ body {
 		box-shadow: 0 0 3px rgba(0,0,0,.19);
 		border-radius: 4px;
 	}
-	.table > .row.UNKNOWN {
+	.table > .row.METHOD {
 		background-color: rgba(62,62,62,.1);
 		border: 1px solid #C2C2C2;
 		box-shadow: 0 0 3px rgba(0,0,0,.19);

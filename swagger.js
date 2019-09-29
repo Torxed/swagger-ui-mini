@@ -24,7 +24,8 @@ export function build_method_square(method, DEPRECATED=false, EDITABLE=false) {
 		type.innerHTML = method;
 	} else {
 		type = document.createElement('input');
-		type.value = method;
+		type.placeholder = method;
+		type.id = 'method';
 	}
 	if(!DEPRECATED)
 		type.classList = 'type ' + method;
@@ -41,6 +42,7 @@ export function build_url_string(url_path, DEPRECATED=false, EDITABLE=false) {
 	} else {
 		url = document.createElement('input');
 		url.value = url_path;
+		url.id = 'url';
 	}
 	
 	if(!DEPRECATED) {
@@ -60,6 +62,7 @@ export function build_description_string(description, EDITABLE=false) {
 		desc = document.createElement('input');
 		desc.value = description;
 		desc.placeholder = 'Description';
+		desc.id = 'description';
 	}
 
 	desc.classList = 'short_desc';
@@ -278,18 +281,52 @@ export function build_row(method, url_path, data) {
 	return row;
 }
 
+export function save_new_entry() {
+	let method = document.getElementById('method').value;
+	let url = document.getElementById('url').value;
+	let description = document.getElementById('description').value;
+
+	let urls = url.split('/');
+	let path = '';
+	let manifest_path = manifest;
+	for(let i=0; i<urls.length; i++) {
+		if(urls[i].length <= 0)
+			continue;
+		path += '/'+urls[i];
+		
+		if(typeof manifest_path['urls'][path] === 'undefined') {
+			manifest_path['urls'][path] = {'urls' : {}}
+		}
+		manifest_path = manifest_path['urls'][path];
+	}
+
+	manifest_path[method] = {
+		'description' : description
+	}
+
+	let container = document.getElementById('table')
+	container.innerHTML = '';
+	console.log(JSON.stringify(manifest, null, 4));
+	load_urls(manifest['urls'], container);
+
+	add_empty_slot(container);
+}
+
 export function generate_save_button(label) {
 	let button = document.createElement('button');
 	button.classList = 'button';
 	button.innerHTML = label;
+	button.addEventListener('click', function() {
+		save_new_entry();
+	});
 	return button;
 }
 
 export function add_empty_slot(container) {
 	let row = document.createElement('div');
-	let [type, url, short_desc] = build_header('UNKNOWN', '/', '', false, true);
+	let [type, url, short_desc] = build_header('METHOD', '/', '', false, true);
 
-	row.classList = 'row UNKNOWN';
+	row.classList = 'row METHOD';
 
 	row.appendChild(type);
 	row.appendChild(url);
