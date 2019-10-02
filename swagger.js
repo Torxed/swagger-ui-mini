@@ -33,8 +33,8 @@ export function build_method_square(method, DEPRECATED=false, EDITABLE=false) {
 		type.classList = 'type ' + method + ' DEPRECATED';
 
 	type.oninput = (event) => {
-		type.classList = 'type ' + type.value;
-		type.parentElement.classList = 'row ' + type.value;
+		type.classList = 'type METHOD ' + type.value;
+		type.parentElement.classList = 'row METHOD ' + type.value;
 	}
 
 	return type;
