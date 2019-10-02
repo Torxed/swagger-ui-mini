@@ -31,6 +31,12 @@ export function build_method_square(method, DEPRECATED=false, EDITABLE=false) {
 		type.classList = 'type ' + method;
 	else
 		type.classList = 'type ' + method + ' DEPRECATED';
+
+	type.oninput = (event) => {
+		type.classList = 'type ' + type.value;
+		type.parentElement.classList = 'row ' + type.value;
+	}
+
 	return type;
 }
 
@@ -94,15 +100,16 @@ export function generate_lock_icon() {
 	return authorization_required;
 }
 
-export function build_description(description, EDITABLE=false) {
+export function build_api_information(information, EDITABLE=false) {
 	let tmp;
 	if(!EDITABLE) {
 		tmp = document.createElement('div');
-		tmp.innerHTML = description;
+		tmp.innerHTML = information;
 	} else {
 		tmp = document.createElement('input');
-		tmp.value = description;
-		tmp.placeholder = 'Description';
+		tmp.value = information;
+		tmp.placeholder = 'API Information';
+		tmp.id = 'api_description';
 	}
 		
 	tmp.classList = 'description';
@@ -238,7 +245,7 @@ export function build_api_info(data, EDITABLE=false) {
 	let payloads = data ? data['payloads'] : null
 	content.classList = 'content';
 	
-	let descriptions = build_description(description, EDITABLE);
+	let descriptions = build_api_information(description, EDITABLE);
 	let parameters = build_parameters_info(payloads, EDITABLE);
 
 	content.appendChild(descriptions);
@@ -251,6 +258,7 @@ export function build_row(method, url_path, data) {
 	let row = document.createElement('div');
 	let DEPRECATED = false;
 
+	console.log(data);
 	if(typeof data['flags'] === "undefined") { data['flags'] = '' };
 	if(data['flags'].indexOf('DEPRECATED') >= 0)
 		DEPRECATED = true;
@@ -285,6 +293,7 @@ export function save_new_entry() {
 	let method = document.getElementById('method').value;
 	let url = document.getElementById('url').value;
 	let description = document.getElementById('description').value;
+	let api_description = document.getElementById('api_description').value;
 
 	let urls = url.split('/');
 	let path = '';
@@ -300,6 +309,7 @@ export function save_new_entry() {
 		manifest_path = manifest_path['urls'][path];
 	}
 
+	manifest_path['description'] = api_description;
 	manifest_path[method] = {
 		'description' : description
 	}
@@ -324,7 +334,7 @@ export function generate_save_button(label) {
 
 export function add_empty_slot(container) {
 	let row = document.createElement('div');
-	let [type, url, short_desc] = build_header('METHOD', '/', '', false, true);
+	let [type, url, short_desc] = build_header('METHOD', '/pet/{petId}/getImage', 'A short description', false, true);
 
 	row.classList = 'row METHOD';
 
@@ -363,6 +373,7 @@ export function load_urls(data, container) {
 		forEach(data[url], function(method, val) {
 			if (method == 'urls') {
 				load_urls(val, container);
+			} else if (method == 'description') {
 			} else {
 				let row = build_row(method, url, val);
 				row.addEventListener('click', function() {

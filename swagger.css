@@ -47,26 +47,33 @@ body {
 	}
 		.table > .row > .type.POST {
 			background-color: #49cc90;
+			border: 0px;
 		}
 		.table > .row > .type.PUT {
 			background-color: #fca130;
+			border: 0px;
 		}
 		.table > .row > .type.GET {
 			background-color: #61affe;
+			border: 0px;
 		}
 		.table > .row > .type.DEPRECATED {
 			background-color: #ebebeb;
+			border: 0px;
 		}
 			.table > .row > .url.DEPRECATED {
 				text-decoration: line-through;
+				border: 0px;
 			}
 		.table > .row > .type.DELETE {
 			background-color: #f93e3e;
+			border: 0px;
 		}
 		.table > .row > .type.METHOD {
 			background-color: #fBfBfB;
 			color: #C2C2C2;
 			text-transform: uppercase;
+			border: 0px;
 		}
 
 	.table > .row > .url {
