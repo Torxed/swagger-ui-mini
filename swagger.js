@@ -201,8 +201,9 @@ export function build_parameters_info(data, EDITABLE=false) {
 	} else {
 		/* Edit new data */
 		let name = document.createElement('div');
+		let name_input = document.createElement('input');
 		let description = document.createElement('div');
-		let description_span = document.createElement('span');
+		let description_input = document.createElement('textarea');
 		let example = document.createElement('div');
 		let code = document.createElement('pre');
 
@@ -214,9 +215,12 @@ export function build_parameters_info(data, EDITABLE=false) {
 		description.classList = 'description';
 		example.classList = 'example';
 
-		name.innerHTML = "New parameter";
-		description_span.innerHTML = "Enter new description";
-		description.appendChild(description_span);
+		name_input.placeholder = 'Name of parameter';
+		name.innerHTML = "New parameter<br>";
+		name.appendChild(name_input);
+		description.innerHTML = 'Enter new description<br>';
+		description_input.placeholder = "The format follows markdown..";
+		description.appendChild(description_input);
 
 //		if(typeof val['data'] !== 'undefined') {
 //			code.innerHTML = ;
@@ -226,6 +230,27 @@ export function build_parameters_info(data, EDITABLE=false) {
 
 		parameters.appendChild(name);
 		parameters.appendChild(description);
+
+		title = document.createElement('h4');
+		title.innerHTML = 'Responses';
+		parameters.appendChild(title);
+
+		let label_code = document.createElement('div');
+		let code_input = document.createElement('input');
+		label_code.classList = 'name';
+		label_code.innerHTML = 'New response code<br>';
+		code_input.placeholder = 'Ex: 200'
+		label_code.appendChild(code_input);
+
+		let new_value = document.createElement('div');
+		let new_value_input = document.createElement('textarea');
+		new_value.classList = 'description';
+		new_value_input.placeholder = 'Example response data or a description'
+		new_value.innerHTML = 'Enter a new response:<br>';
+		new_value.appendChild(new_value_input);
+
+		parameters.appendChild(label_code);
+		parameters.appendChild(new_value);
 
 		//let responses = build_responses(val['responses']);
 
