@@ -10,6 +10,10 @@ export function load_manifest(url, post) {
 	xhr.send();
 }
 
+export function time() {
+	return Math.round((new Date()).getTime() / 1000);
+}
+
 export function forEach(obj, func) {
 	//Object.keys(obj).forEach(func);
 	for (const [key, val] of Object.entries(obj)) {
@@ -17,9 +21,9 @@ export function forEach(obj, func) {
 	}
 }
 
-export function build_method_square(method, DEPRECATED=false, EDITABLE=false) {
+export function build_method_square(method, DEPRECATED=false) {
 	let type;
-	if(!EDITABLE) {
+	if(typeof EDITABLE === 'undefined' || !EDITABLE) {
 		type = document.createElement('div');
 		type.innerHTML = method;
 	} else {
@@ -40,9 +44,9 @@ export function build_method_square(method, DEPRECATED=false, EDITABLE=false) {
 	return type;
 }
 
-export function build_url_string(url_path, DEPRECATED=false, EDITABLE=false) {
+export function build_url_string(url_path, DEPRECATED=false) {
 	let url;
-	if(!EDITABLE) {
+	if(typeof EDITABLE === 'undefined' || !EDITABLE) {
 		url = document.createElement('div')
 		url.innerHTML = url_path;
 	} else {
@@ -59,9 +63,9 @@ export function build_url_string(url_path, DEPRECATED=false, EDITABLE=false) {
 	return url;
 }
 
-export function build_description_string(description, EDITABLE=false) {
+export function build_description_string(description) {
 	let desc;
-	if(!EDITABLE) {
+	if(typeof EDITABLE === 'undefined' || !EDITABLE) {
 		desc = document.createElement('div');
 		desc.innerHTML = description;
 	} else {
@@ -76,10 +80,10 @@ export function build_description_string(description, EDITABLE=false) {
 	return desc;
 }
 
-export function build_header(method, url_path, description, DEPRECATED=false, EDITABLE=false) {
-	let type = build_method_square(method, DEPRECATED, EDITABLE)
-	let url = build_url_string(url_path, DEPRECATED, EDITABLE);
-	let desc = build_description_string(description, EDITABLE);
+export function build_header(method, url_path, description, DEPRECATED=false) {
+	let type = build_method_square(method, DEPRECATED)
+	let url = build_url_string(url_path, DEPRECATED);
+	let desc = build_description_string(description);
 	return [type, url, desc];
 }
 
@@ -100,9 +104,9 @@ export function generate_lock_icon() {
 	return authorization_required;
 }
 
-export function build_api_information(information, EDITABLE=false) {
+export function build_api_information(information) {
 	let tmp;
-	if(!EDITABLE) {
+	if(typeof EDITABLE === 'undefined' || !EDITABLE) {
 		tmp = document.createElement('div');
 		tmp.innerHTML = information;
 	} else {
@@ -156,7 +160,7 @@ export function build_responses(data) {
 	return responses;
 }
 
-export function build_parameters_info(data, EDITABLE=false) {
+export function build_parameters_info(data) {
 	let parameters = document.createElement('div');
 	parameters.classList = 'parameters';
 
@@ -264,14 +268,14 @@ export function build_parameters_info(data, EDITABLE=false) {
 	return parameters;
 }
 
-export function build_api_info(data, EDITABLE=false) {
+export function build_api_info(data) {
 	let content = document.createElement('div');
 	let description = data ? data['description'] : null
 	let payloads = data ? data['payloads'] : null
 	content.classList = 'content';
 	
-	let descriptions = build_api_information(description, EDITABLE);
-	let parameters = build_parameters_info(payloads, EDITABLE);
+	let descriptions = build_api_information(description);
+	let parameters = build_parameters_info(payloads);
 
 	content.appendChild(descriptions);
 	content.appendChild(parameters);
@@ -314,7 +318,11 @@ export function build_row(method, url_path, data) {
 	return row;
 }
 
-export function save_new_entry() {
+export function delete_entry(row_id) {
+	console.log("Deleting " + row_id);
+}
+
+export function save_new_entry(row_id) {
 	let method = document.getElementById('method').value;
 	let url = document.getElementById('url').value;
 	let description = document.getElementById('description').value;
@@ -347,27 +355,32 @@ export function save_new_entry() {
 	add_empty_slot(container);
 }
 
-export function generate_save_button(label) {
+export function generate_button(label, classes='', func) {
 	let button = document.createElement('button');
-	button.classList = 'button';
+	button.classList = 'button ' + classes;
 	button.innerHTML = label;
-	button.addEventListener('click', function() {
-		save_new_entry();
-	});
+	button.addEventListener('click', func);
 	return button;
 }
 
 export function add_empty_slot(container) {
 	let row = document.createElement('div');
+	let row_id = "entry_"+time()+Math.random();
 	let [type, url, short_desc] = build_header('METHOD', '/pet/{petId}/getImage', 'A short description', false, true);
 
 	row.classList = 'row METHOD';
+	row.id = row_id;
 
 	row.appendChild(type);
 	row.appendChild(url);
 	row.appendChild(short_desc);
 	row.appendChild(generate_lock_icon());
-	row.appendChild(generate_save_button("Save"));
+	row.appendChild(generate_button("Delete", "delete", function() {
+		delete_entry(row_id);
+	}));
+	row.appendChild(generate_button("Save", "save", function() {
+		save_new_entry(row_id);
+	}));
 
 	let endpoint_instructions = build_api_info(null, true);
 
