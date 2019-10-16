@@ -1,5 +1,26 @@
+:root {
+	--blue: #0088CC;
+	--light-blue: #33aadd;
+	--light-blue-border: #0088bb;
+	--links: #666666;
+	--links-hover: #FFFFFF;
+}
+
 body {
 	font-family: sans-serif;
+}
+
+span.button {
+	color: var(--blue);
+	cursor: pointer;
+	border: 1px solid var(--light-blue);
+	padding-left: 2px;
+	padding-right: 2px;
+	border-radius: 3px;
+}
+
+span.button:hover {
+	color: var(--light-blue);
 }
 
 .break {

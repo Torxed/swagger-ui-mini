@@ -414,8 +414,12 @@ export function load_urls(data, container) {
 			} else if (method == 'description') {
 			} else {
 				let row = build_row(method, url, val);
-				row.addEventListener('click', function() {
-					expand(row)
+				row.addEventListener('click', function(event) {
+					if(event.target == row ||
+						event.target == row.getElementsByClassName('short_desc')[0] ||
+						event.target == row.getElementsByClassName('url')[0] ||
+						event.target == row.getElementsByClassName('type')[0])
+							expand(row)
 				})
 				container.appendChild(row);
 			}
