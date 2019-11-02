@@ -92,6 +92,11 @@ span.button:hover {
 			color: #FFFFFF !important;
 			border: 0px;
 		}
+		.table > .row > .type.UPDATE {
+			background-color: #fca3ff !important;
+			color: #FFFFFF !important;
+			border: 0px;
+		}
 		.table > .row > .type.DEPRECATED {
 			background-color: #ebebeb !important;
 			color: #FFFFFF !important;
@@ -145,6 +150,12 @@ span.button:hover {
 	.table > .row.GET {
 		background-color: rgba(97,175,254,.1) !important;
 		border: 1px solid #61affe !important;
+		box-shadow: 0 0 3px rgba(0,0,0,.19);
+		border-radius: 4px;
+	}
+	.table > .row.UPDATE {
+		background-color: rgba(255,163,255,.1) !important;
+		border: 1px solid #fca3ff !important;
 		box-shadow: 0 0 3px rgba(0,0,0,.19);
 		border-radius: 4px;
 	}
