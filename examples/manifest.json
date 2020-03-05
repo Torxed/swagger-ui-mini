@@ -87,7 +87,7 @@
 					"GET" : {
 						"description" : "Find pet by ID"
 					},
-					"POST" : {
+					"UPDATE" : {
 						"description" : "Updates a pet in teh store with form data"
 					},
 					"DELETE" : {
