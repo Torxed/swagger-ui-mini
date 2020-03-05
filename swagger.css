@@ -72,30 +72,42 @@ span.button:hover {
 		border-radius: 3px;
 		text-shadow: 0 1px 0 rgba(0,0,0,.1);
 	}
-		.table > .row > .type.POST {
-			background-color: #49cc90 !important;
+		.table > .row > .type {
 			color: #FFFFFF !important;
 			border: 0px;
+		}
+		.table > .row > .type.POST {
+			background-color: #49cc90 !important;
+		}
+		.table > .row > .type.REGISTER {
+			background-color: #61affe !important;
+		}
+		.table > .row > .type.DOWNLOAD {
+			background-color: #49cc90 !important;
+		}
+		.table > .row > .type.SEND {
+			background-color: #61affe !important;
 		}
 		.table > .row > .type.PUT {
 			background-color: #fca130 !important;
-			color: #FFFFFF !important;
-			border: 0px;
+		}
+		.table > .row > .type.VERIFY {
+			background-color: #fca130 !important;
 		}
 		.table > .row > .type.GET {
-			background-color: #61affe !important;
-			color: #FFFFFF !important;
-			border: 0px;
+			background-color: #49cc90 !important;
 		}
 		.table > .row > .type.OPTIONS {
 			background-color: #0d5aa7 !important;
-			color: #FFFFFF !important;
-			border: 0px;
+		}
+		.table > .row > .type.UPDATE {
+			background-color: #fca3ff !important;
+		}
+		.table > .row > .type.INFO {
+			background-color: #fca3ff !important;
 		}
 		.table > .row > .type.DEPRECATED {
 			background-color: #ebebeb !important;
-			color: #FFFFFF !important;
-			border: 0px;
 		}
 			.table > .row > .url.DEPRECATED {
 				text-decoration: line-through;
@@ -103,8 +115,6 @@ span.button:hover {
 			}
 		.table > .row > .type.DELETE {
 			background-color: #f93e3e !important;
-			color: #FFFFFF !important;
-			border: 0px;
 		}
 		.table > .row > .type.METHOD {
 			background-color: #fBfBfB;
@@ -128,50 +138,69 @@ span.button:hover {
 		color: #3b4151;
 	}
 
-	.table > .row.POST {
-		background-color: rgba(73,204,144,.1) !important;
-		border: 1px solid #49cc90 !important;
+	.table > .row {
 		box-shadow: 0 0 3px rgba(0,0,0,.19);
 		border-radius: 4px;
 	}
-
+	.table > .row.POST {
+		background-color: rgba(73,204,144,.1) !important;
+		border: 1px solid #49cc90 !important;
+	}
+	.table > .row.GET {
+		background-color: rgba(73,204,144,.1) !important;
+		border: 1px solid #49cc90 !important;
+	}
+	.table > .row.REGISTER {
+		background-color: rgba(97,175,254,.1) !important;
+		border: 1px solid #61affe !important;
+	}
+	.table > .row.DOWNLOAD {
+		background-color: rgba(73,204,144,.1) !important;
+		border: 1px solid #49cc90 !important;
+	}
 	.table > .row.PUT {
 		background-color: rgba(252,161,48,.1) !important;
 		border: 1px solid #fca130 !important;
-		box-shadow: 0 0 3px rgba(0,0,0,.19);
-		border-radius: 4px;
+	}
+	.table > .row.VERIFY {
+		background-color: rgba(252,161,48,.1) !important;
+		border: 1px solid #fca130 !important;
 	}
 
 	.table > .row.GET {
 		background-color: rgba(97,175,254,.1) !important;
 		border: 1px solid #61affe !important;
+	}
+	.table > .row.SEND {
+		background-color: rgba(97,175,254,.1) !important;
+		border: 1px solid #61affe !important;
+	}
+	.table > .row.UPDATE {
+		background-color: rgba(255,163,255,.1) !important;
+		border: 1px solid #fca3ff !important;
+	}
+	.table > .row.INFO {
+		background-color: rgba(255,163,255,.1) !important;
+		border: 1px solid #fca3ff !important;
 		box-shadow: 0 0 3px rgba(0,0,0,.19);
 		border-radius: 4px;
 	}
 	.table > .row.OPTIONS {
 		background-color: rgba(13,90,167,.1) !important;
 		border: 1px solid #0d5aa7 !important;
-		box-shadow: 0 0 3px rgba(0,0,0,.19);
-		border-radius: 4px;
 	}
 	.table > .row.DEPRECATED {
 		background: hsla(0,0%,92.2%,.1) !important;
 		border: 1px solid #ebebeb !important;
-		box-shadow: 0 0 3px rgba(0,0,0,.19);
-		border-radius: 4px;
 		opacity: .6;
 	}
 	.table > .row.DELETE {
 		background-color: rgba(249,62,62,.1) !important;
 		border: 1px solid #f93e3e !important;
-		box-shadow: 0 0 3px rgba(0,0,0,.19);
-		border-radius: 4px;
 	}
 	.table > .row.METHOD {
 		background-color: rgba(62,62,62,.1);
 		border: 1px solid #C2C2C2;
-		box-shadow: 0 0 3px rgba(0,0,0,.19);
-		border-radius: 4px;
 	}
 
 .authbutton {
